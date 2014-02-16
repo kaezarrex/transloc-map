@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/kaezarrex/transloc-map/issues"
   },
-  "homepage": "https://github.com/kaezarrex/transloc-map"
+  "homepage": "https://github.com/kaezarrex/transloc-map",
+  "dependencies": {
+    "nib": "~1.0.2",
+    "stylus": "~0.42.2",
+    "jade": "~1.1.5",
+    "express": "~3.4.8",
+    "logfmt": "~0.21.0"
+  }
 }
