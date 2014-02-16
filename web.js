@@ -2,6 +2,8 @@ var express = require("express"),
     stylus = require('stylus') ,
     nib = require('nib'),
     logfmt = require("logfmt"),
+    https = require('https'),
+    url = require('url'),
     app = express();
 
 var app = express();
@@ -21,6 +23,54 @@ app.use(logfmt.requestLogger());
 
 app.get('/', function (req, res) {
     res.render('index', { title : 'Home' } );
+});
+
+function mashape(path, success, error) {
+
+    var options = {
+      hostname: 'transloc-api-1-2.p.mashape.com',
+      port: 443,
+      path: path,
+      method: 'GET',
+      headers: {
+          'X-Mashape-Authorization': process.env.MASHAPE_KEY
+      }
+    };
+
+    var req = https.request(options, function(res) {
+      var body = '';
+
+      res.on('data', function(d) {
+          body += d.toString();
+      });
+      res.on('end', function() {
+          success(body);
+      });
+    });
+
+
+    req.on('error', function(e) {
+        error(e);
+    });
+
+    req.end();
+}
+
+app.get('/api/agencies', function (req, res) {
+
+    var path = url.format({
+        pathname: '/agencies',
+        query: req.query
+    });
+
+    res.set('Content-Type', 'application/json');
+
+    mashape(path, function(data) {
+      res.send(data);
+    }, function(e) {
+      console.log(e);
+      res.json(500, { error: e })
+    });
 });
 
 var port = Number(process.env.PORT || 5000);
