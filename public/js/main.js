@@ -9,6 +9,7 @@ function forEach(list, callback) {
 
 function createInfoWindow(agency, callback) {
     var agency_id = agency.agency_id,
+        infowindow,
         content;
 
     if (agency.url) {
@@ -17,16 +18,30 @@ function createInfoWindow(agency, callback) {
         content = '<div>' + agency.long_name + '</div>';
     }
 
+    infowindow = new google.maps.InfoWindow({
+        content: content
+    })
+
     $.getJSON('/api/vehicles?agencies=' + agency_id, function(res) {
-        var vehicles = res.data[agency_id] || [],
-            numVehicles = vehicles.length;
+        var vehicles = res.data[agency_id] || [];
 
-        content += '<div>' + numVehicles + ' vehicles</div>';
-
-        callback(new google.maps.InfoWindow({
-            content: content
-        }));
+        content += '<div>' + vehicles.length + ' vehicles</div>';
+        infowindow.setContent(content);
     });
+
+    $.getJSON('/api/routes?agencies=' + agency_id, function(res) {
+        var routes = res.data[agency_id] || [];
+
+        content += '<div>' + routes.length + ' routes</div>';
+        infowindow.setContent(content);
+    });
+
+    $.getJSON('/api/stops?agencies=' + agency_id, function(res) {
+        content += '<div>' + res.data.length + ' stops</div>';
+        infowindow.setContent(content);
+    });
+
+    return infowindow
 }
 
 var mapOptions = {
@@ -49,11 +64,12 @@ $.getJSON('/api/agencies', function(res) {
         });
 
         google.maps.event.addListener(marker, 'click', function() {
-            createInfoWindow(agency, function(infowindow) {
-                infowindow.open(map,marker);
-                google.maps.event.addListener(map, 'click', function() {
-                    infowindow.close();
-                });
+            var infowindow = createInfoWindow(agency);
+
+            infowindow.open(map,marker);
+
+            google.maps.event.addListener(map, 'click', function() {
+                infowindow.close();
             });
         });
     });
