@@ -56,10 +56,10 @@ function mashape(path, success, error) {
     req.end();
 }
 
-app.get('/api/agencies', function (req, res) {
+app.get('/api/:entity', function (req, res) {
 
     var path = url.format({
-        pathname: '/agencies',
+        pathname: '/' + req.param('entity'),
         query: req.query
     });
 
