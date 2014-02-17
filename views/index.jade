@@ -1,22 +1,12 @@
 doctype html
 html
     head
-        meta(name='viewport', content='width=device-width')
         title TransLoc Map
+        meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
+        meta(charset='utf-8')
+        link(rel='stylesheet', href='/css/style.css')
     body
-        header
-            h1 TransLoc Map
-        .container
-            .main-content
-              p
-                | Vivamus hendrerit arcu sed erat molestie
-                | vehicula. Sed auctor neque eu tellus
-                | rhoncus ut eleifend nibh porttitor. Ut in.
-
-              p
-                | Donec congue lacinia dui, a porttitor
-                | lectus condimentum laoreet. Nunc eu
-                | ullamcorper orci. Quisque eget odio ac
-                | lectus vestibulum faucibus eget in metus.
-                | In pellentesque faucibus vestibulum. Nulla
-                | at nulla justo, eget luctus tortor.
+        #map-canvas
+        script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+        script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
+        script(type='text/javascript', src='/js/main.js')
